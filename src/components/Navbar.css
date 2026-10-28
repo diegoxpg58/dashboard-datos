@@ -1,0 +1,19 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  background-color: #1e293b;
+  color: #ffffff;
+  font-family: system-ui, sans-serif;
+}
+
+.navbar-titulo {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.navbar-alumno {
+  font-size: 1rem;
+  color: #94a3b8;
+}
