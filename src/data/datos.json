@@ -1,0 +1,14 @@
+[
+  { "id": 1, "mes": "Enero", "ventas": 45200, "unidades": 312, "clientes": 210 },
+  { "id": 2, "mes": "Febrero", "ventas": 38900, "unidades": 270, "clientes": 188 },
+  { "id": 3, "mes": "Marzo", "ventas": 52300, "unidades": 361, "clientes": 240 },
+  { "id": 4, "mes": "Abril", "ventas": 49800, "unidades": 344, "clientes": 229 },
+  { "id": 5, "mes": "Mayo", "ventas": 61500, "unidades": 425, "clientes": 276 },
+  { "id": 6, "mes": "Junio", "ventas": 58700, "unidades": 405, "clientes": 263 },
+  { "id": 7, "mes": "Julio", "ventas": 64200, "unidades": 443, "clientes": 291 },
+  { "id": 8, "mes": "Agosto", "ventas": 59900, "unidades": 414, "clientes": 270 },
+  { "id": 9, "mes": "Septiembre", "ventas": 55400, "unidades": 383, "clientes": 252 },
+  { "id": 10, "mes": "Octubre", "ventas": 67800, "unidades": 468, "clientes": 305 },
+  { "id": 11, "mes": "Noviembre", "ventas": 72500, "unidades": 501, "clientes": 327 },
+  { "id": 12, "mes": "Diciembre", "ventas": 89300, "unidades": 617, "clientes": 398 }
+]
