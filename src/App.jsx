@@ -3,6 +3,7 @@ import './App.css'
 import Navbar from './components/Navbar'
 import TarjetaMetrica from './components/TarjetaMetrica'
 import TablaDatos from './components/TablaDatos'
+import PanelAnalitico from './components/PanelAnalitico'
 import {
   obtenerDatosVisualizacion,
   procesarDatos,
@@ -67,6 +68,8 @@ function App() {
             <TablaDatos filas={datos.filas} />
           </>
         )}
+
+        <PanelAnalitico />
       </main>
     </>
   )
