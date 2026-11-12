@@ -1,0 +1,101 @@
+/* ===== Estructura general con CSS Grid ===== */
+.dashboard {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'encabezado encabezado'
+    'lateral principal';
+  min-height: 100vh;
+}
+
+.dashboard-encabezado {
+  grid-area: encabezado;
+}
+
+.dashboard-lateral {
+  grid-area: lateral;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 24px;
+  background-color: #ffffff;
+  border-right: 1px solid #e2e8f0;
+}
+
+.dashboard-principal {
+  grid-area: principal;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  min-width: 0;
+}
+
+/* ===== Menú de navegación ===== */
+.dashboard-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dashboard-menu a {
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #334155;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.dashboard-menu a:hover {
+  background-color: #f1f5f9;
+}
+
+/* ===== Zonas del área principal ===== */
+.zona-metricas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.zona-graficos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+/* ===== Responsivo: tablets ===== */
+@media (max-width: 1024px) {
+  .zona-metricas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .zona-graficos {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Responsivo: celulares ===== */
+@media (max-width: 768px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'encabezado'
+      'lateral'
+      'principal';
+  }
+
+  .dashboard-lateral {
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .dashboard-menu {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .zona-metricas {
+    grid-template-columns: 1fr;
+  }
+}

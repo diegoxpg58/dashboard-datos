@@ -1,31 +1,32 @@
 import './TablaDatos.css'
-import { formatearMoneda } from '../services/dataService'
 
-function TablaDatos({ filas }) {
+function TablaDatos({ columnas, filas }) {
   return (
     <div className="tabla-contenedor">
       <table className="tabla">
         <thead>
           <tr>
-            <th>#</th>
-            <th>Mes</th>
-            <th>Ventas</th>
-            <th>Unidades</th>
-            <th>Clientes</th>
-            <th>Ticket promedio</th>
+            {columnas.map((columna) => (
+              <th key={columna.clave}>{columna.titulo}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          {filas.map((fila) => (
-            <tr key={fila.id}>
-              <td>{fila.id}</td>
-              <td>{fila.mes}</td>
-              <td>{formatearMoneda(fila.ventas)}</td>
-              <td>{fila.unidades}</td>
-              <td>{fila.clientes}</td>
-              <td>{formatearMoneda(fila.ticketPromedio)}</td>
+          {filas.length === 0 ? (
+            <tr>
+              <td colSpan={columnas.length}>No hay datos para los filtros seleccionados.</td>
             </tr>
-          ))}
+          ) : (
+            filas.map((fila) => (
+              <tr key={fila.id}>
+                {columnas.map((columna) => (
+                  <td key={columna.clave}>
+                    {columna.formato ? columna.formato(fila[columna.clave]) : fila[columna.clave]}
+                  </td>
+                ))}
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>

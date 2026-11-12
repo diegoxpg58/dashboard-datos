@@ -13,8 +13,7 @@ export async function obtenerDatosVisualizacion() {
   })
 }
 
-// Prepara los datos para mostrarlos en pantalla:
-// extrae etiquetas y valores, calcula métricas y agrega columnas nuevas.
+// Prepara los datos de ventas para mostrarlos en pantalla.
 export function procesarDatos(datos) {
   const etiquetas = datos.map((d) => d.mes)
   const valores = datos.map((d) => d.ventas)
@@ -51,12 +50,43 @@ export function formatearMoneda(valor) {
   return valor.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })
 }
 
-// ===================== PRACTICA 3.3 =====================
+// ===================== PRÁCTICA 3.3 y 3.4 =====================
+
+// Ciudades disponibles en el filtro
+export const CIUDADES = {
+  cdmx: { nombre: 'Ciudad de México', latitud: 19.43, longitud: -99.13 },
+  guadalajara: { nombre: 'Guadalajara', latitud: 20.67, longitud: -103.35 },
+  monterrey: { nombre: 'Monterrey', latitud: 25.69, longitud: -100.32 },
+  cancun: { nombre: 'Cancún', latitud: 21.16, longitud: -86.85 },
+}
+
+// Devuelve una fecha en formato "AAAA-MM-DD" sumando o restando días a hoy.
+// Ejemplo: obtenerFechaRelativa(-7) = hace 7 días
+export function obtenerFechaRelativa(dias) {
+  const fecha = new Date()
+  fecha.setDate(fecha.getDate() + dias)
+  const anio = fecha.getFullYear()
+  const mes = String(fecha.getMonth() + 1).padStart(2, '0')
+  const dia = String(fecha.getDate()).padStart(2, '0')
+  return `${anio}-${mes}-${dia}`
+}
+
+// Valores con los que inicia el dashboard
+export function filtrosIniciales() {
+  return {
+    ciudad: 'cdmx',
+    fechaInicio: obtenerFechaRelativa(-7),
+    fechaFin: obtenerFechaRelativa(6),
+  }
+}
+
+// Calcula el promedio de un arreglo de números
 function promedio(numeros) {
   return numeros.reduce((suma, n) => suma + n, 0) / numeros.length
 }
 
-function formatearFecha(fecha) {
+// Convierte "2026-11-11" en un texto como "mié, 11 nov"
+export function formatearFecha(fecha) {
   return new Date(`${fecha}T00:00:00`).toLocaleDateString('es-MX', {
     weekday: 'short',
     day: 'numeric',
@@ -64,23 +94,34 @@ function formatearFecha(fecha) {
   })
 }
 
+// Consulta la API externa (Open-Meteo) y devuelve los datos del clima ya limpios.
+// Acepta un rango de fechas (fechaInicio y fechaFin) o un número de días (dias).
 export async function obtenerPrediccion(parametros) {
-  const respuesta = await apiClient.get('/forecast', {
-    params: {
-      latitude: parametros.latitud,
-      longitude: parametros.longitud,
-      daily: 'temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max',
-      forecast_days: parametros.dias,
-      timezone: 'America/Mexico_City',
-    },
-  })
+  const params = {
+    latitude: parametros.latitud,
+    longitude: parametros.longitud,
+    daily: 'temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max',
+    timezone: 'America/Mexico_City',
+  }
 
+  if (parametros.fechaInicio && parametros.fechaFin) {
+    params.start_date = parametros.fechaInicio
+    params.end_date = parametros.fechaFin
+  } else {
+    params.forecast_days = parametros.dias
+  }
+
+  // 1. Petición GET enviando los parámetros
+  const respuesta = await apiClient.get('/forecast', { params })
+
+  // 2. Extraer la carga útil (payload) de la respuesta
   const diario = respuesta.data.daily
 
   if (!diario || !diario.time) {
     throw new Error('La API no devolvió datos de predicción')
   }
 
+  // 3. Limpiar y dar formato a los datos
   const filas = diario.time.map((fecha, i) => ({
     id: i + 1,
     fecha: formatearFecha(fecha),
@@ -90,6 +131,7 @@ export async function obtenerPrediccion(parametros) {
     probabilidad: diario.precipitation_probability_max[i] ?? 0,
   }))
 
+  // 4. Calcular métricas resumen
   const metricas = {
     promedioMax: promedio(filas.map((f) => f.tempMax)),
     promedioMin: promedio(filas.map((f) => f.tempMin)),
@@ -97,5 +139,6 @@ export async function obtenerPrediccion(parametros) {
     probabilidadMaxima: Math.max(...filas.map((f) => f.probabilidad)),
   }
 
+  // 5. Retornar los datos limpios
   return { filas, metricas }
 }
